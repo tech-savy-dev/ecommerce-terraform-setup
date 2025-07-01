@@ -19,4 +19,8 @@ output "repository_name" {
   value  = module.ecr.repository_name
 }
 
+output "debug_role_arns" {
+  value = module.iam.role_arns
+}
+
 
