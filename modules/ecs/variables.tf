@@ -1,57 +1,51 @@
 variable "cluster_name" {
-  description = "Name of the ECS cluster"
+  description = "The name of the ECS cluster"
   type        = string
 }
 
-variable "service_name" {
-  description = "Name of the ECS service"
-  type        = string
-}
-
-variable "task_family" {
-  description = "Name of the ECS task definition family"
-  type        = string
-}
-
-variable "container_name" {
-  description = "Name of the container"
-  type        = string
-}
-
-variable "container_port" {
-  description = "Port the container listens on"
-  type        = number
-}
-
-variable "image_url" {
-  description = "Docker image URL"
-  type        = string
-}
-
-variable "cpu" {
-  description = "CPU units for the container"
-  type        = number
-  default     = 256
-}
-
-variable "memory" {
-  description = "Memory (in MiB) for the container"
-  type        = number
-  default     = 512
+variable "ecs_tasks" {
+  description = "List of ECS tasks"
+  type = list(object({
+    task_name        = string
+    task_family      = string
+    container_name   = string
+    image_url        = string
+    container_port   = number
+    service_name     = string
+    cpu              = string
+    memory           = string
+    desired_count    = number
+    assign_public_ip = bool
+  }))
 }
 
 variable "subnet_ids" {
-  description = "List of subnet IDs"
+  description = "The list of subnet IDs for the ECS service"
   type        = list(string)
 }
 
 variable "security_groups" {
-  description = "Security group IDs"
+  description = "Security groups for ECS services"
   type        = list(string)
+  default     = []
 }
 
-variable "assign_public_ip" {
-  description = "Assign public IP to ECS task"
-  type        = bool
-  default     = false
+variable "vpc_id" {
+  description = "The VPC ID to associate with the ECS resources"
+  type        = string
+}
+
+variable "service_name" {
+  description = "The service name for the ECS service"
+  type        = string
+}
+
+variable "ecs_execution_role_arn" {
+  description = "Ecs to pull images from ECR"
+  type        = string
+}
+
+variable "region" {
+  description = "Region for all"
+  type        = string
 }

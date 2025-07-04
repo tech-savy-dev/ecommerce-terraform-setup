@@ -24,3 +24,7 @@ output "role_name_pipeline" {
 output "codeartifact_access_policy_arn" {
   value = aws_iam_policy.codeartifact_access.arn
 }
+
+output "ecs_execution_role_arn" {
+  value = aws_iam_role.ecs_execution_role.arn
+}

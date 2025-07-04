@@ -2,6 +2,7 @@ module "vpc" {
   source   = "../../modules/vpc"
   vpc_name = var.vpc_name
   vpc_cidr = var.vpc_cidr
+  ig_name  = var.ig_name
 }
 
 module "subnets" {
@@ -11,6 +12,7 @@ module "subnets" {
   public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
   subnet_name          = var.subnet_name
+  internet_gateway_id  = module.vpc.internet_gateway_id
 }
 
 module "ecr" {
@@ -86,4 +88,45 @@ module "codepipeline" {
   codestar_connection_arn = var.codestar_connection_arn
   service_role_arn        = module.iam.role_arn_pipeline
   codeartifact_policy_arn = module.iam.codeartifact_access_policy_arn
+}
+
+module "ecs" {
+  source           = "../../modules/ecs"
+  # ECS Cluster-related parameters
+  cluster_name     = var.cluster_name
+  subnet_ids       = module.subnets.private_subnet_ids
+  security_groups  = var.security_groups
+  ecs_tasks = var.ecs_tasks
+  service_name = var.service_name
+  vpc_id               = module.vpc.vpc_id
+  ecs_execution_role_arn = module.iam.ecs_execution_role_arn
+  region             = var.region
+ 
+}
+
+module "vpcendpoint" {
+  source             = "../../modules/vpcendpoint"
+  vpc_id             = module.vpc.vpc_id
+  subnet_ids         = module.subnets.private_subnet_ids
+  security_group_id  = var.security_group_ids[0]
+  route_table_ids    = module.subnets.private_route_table_ids
+  region             = var.region
+}
+
+module "acm" {
+  source                  = "../../modules/acm"
+  domain_name             = var.website_name
+  san_names               = var.san_names
+}
+
+module "alb" {
+  source         = "../../modules/alb"
+  alb_name           = var.alb_name
+  vpc_id         = module.vpc.vpc_id
+  public_subnets = module.subnets.public_subnet_ids
+  certificate_arn = module.acm.certificate_arn
+
+  target_group_port = 80
+  health_check_path = "/actuator/health"
+  target_type       = "ip"
 }

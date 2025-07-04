@@ -22,3 +22,8 @@ variable "subnet_name" {
   description = "Name prefix for subnets"
   type        = string
 }
+
+variable "internet_gateway_id" {
+  description = "Name prefix for subnets"
+  type        = string
+}
