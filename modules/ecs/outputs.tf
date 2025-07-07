@@ -9,6 +9,6 @@ output "ecs_service_names" {
 }
 
 output "ecs_security_group_id" {
-  value = aws_security_group.ecs_security_group[0].id
+  value = aws_security_group.ecs_security_group.id
   description = "The security group ID for the ECS service"
 }

@@ -28,3 +28,7 @@ output "codeartifact_access_policy_arn" {
 output "ecs_execution_role_arn" {
   value = aws_iam_role.ecs_execution_role.arn
 }
+
+output "codedeploy_role_arn" {
+  value = aws_iam_role.codedeploy_role.arn
+}

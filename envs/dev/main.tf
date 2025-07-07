@@ -24,6 +24,8 @@ module "ecr" {
 module "iam" {
   source                 = "../../modules/iam"
   codestar_connection_arn = var.codestar_connection_arn
+  project     = var.project
+  environment = var.environment
   codebuild_role_names    = [
     "codebuild-role-dev-ecommerce-parent-pom-build",
     "codebuild-role-dev-ecommerce-product-service-build"
@@ -90,27 +92,51 @@ module "codepipeline" {
   codeartifact_policy_arn = module.iam.codeartifact_access_policy_arn
 }
 
-module "ecs" {
-  source           = "../../modules/ecs"
-  # ECS Cluster-related parameters
-  cluster_name     = var.cluster_name
-  subnet_ids       = module.subnets.private_subnet_ids
-  security_groups  = var.security_groups
-  ecs_tasks = var.ecs_tasks
-  service_name = var.service_name
-  vpc_id               = module.vpc.vpc_id
-  ecs_execution_role_arn = module.iam.ecs_execution_role_arn
-  region             = var.region
- 
+locals{
+  ecs_tasks = [
+  {
+    task_name        = "ecommerce-product-service"
+    task_family      = "ecommerce-task-family"
+    container_name   = "ecommerce-product-service-container"
+    image_url        = "677450898543.dkr.ecr.ap-southeast-1.amazonaws.com/ecommerce-product-service-dev:a5b303a" 
+    container_port   = 8080  # Port exposed by the container
+    service_name     = "ecommerce-product-service"
+    cpu              = "512"  
+    memory           = "1024"
+    assign_public_ip = false   # Add this attribute
+    desired_count    = 1
+  
+  }
+]
 }
+
+module "ecs" {
+  source                  = "../../modules/ecs"
+  cluster_name            = var.cluster_name
+  subnet_ids              = module.subnets.private_subnet_ids
+  vpc_id                  = module.vpc.vpc_id
+  region                  = var.region
+
+  service_name            = var.service_name
+  ecs_tasks               = local.ecs_tasks
+  ecs_execution_role_arn  = module.iam.ecs_execution_role_arn
+  alb_sg_id               = module.alb.alb_sg_id
+
+  # ✅ Now pass both target groups
+  blue_target_group_arn   = module.alb.target_group_blue_arn
+  green_target_group_arn  = module.alb.target_group_green_arn
+}
+
+
 
 module "vpcendpoint" {
   source             = "../../modules/vpcendpoint"
   vpc_id             = module.vpc.vpc_id
   subnet_ids         = module.subnets.private_subnet_ids
-  security_group_id  = var.security_group_ids[0]
   route_table_ids    = module.subnets.private_route_table_ids
   region             = var.region
+  ecs_security_group_id = module.ecs.ecs_security_group_id
+
 }
 
 module "acm" {
@@ -125,8 +151,33 @@ module "alb" {
   vpc_id         = module.vpc.vpc_id
   public_subnets = module.subnets.public_subnet_ids
   certificate_arn = module.acm.certificate_arn
+  environment         = var.environment 
 
-  target_group_port = 80
+  target_group_port = 8080
   health_check_path = "/actuator/health"
   target_type       = "ip"
 }
+
+module "codedeploy" {
+  for_each = {
+    for cd in var.codedeploy_configs :
+    cd.app_name => cd
+  }
+  source                = "../../modules/codedeploy"
+  app_name              = each.value.app_name
+  ecs_cluster_name      = each.value.ecs_cluster_name
+  ecs_service_name      = each.value.ecs_service_name
+  codedeploy_role_arn   = module.iam.codedeploy_role_arn
+  # ✅ Now pass both target groups
+  blue_target_group_name = module.alb.target_group_blue_name
+  green_target_group_name = module.alb.target_group_green_name
+  listener_arn          = module.alb.https_listener_arn
+  tags = {
+    Environment = "dev"
+    Project     = "shop-snacks"
+    Owner       = "dev-team"
+    Terraform   = "true"
+  }
+}
+
+

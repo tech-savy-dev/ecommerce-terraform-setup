@@ -44,5 +44,9 @@ output "public_route_table_id" {
   value = module.vpc.public_route_table_id
 }
 
+output "codebuild_services" {
+  description = "List of CodeBuild project names deployed"
+  value       = [for name in keys(module.codebuild_project) : name]
+}
 
 

@@ -108,22 +108,6 @@ variable "codeartifact_repos" {
   }))
 }
 
-variable "ecs_tasks" {
-  description = "List of ECS tasks"
-  type = list(object({
-    task_name        = string
-    task_family      = string
-    container_name   = string
-    image_url        = string
-    container_port   = number
-    service_name     = string
-    cpu              = string
-    memory           = string
-    desired_count    = number
-    assign_public_ip = bool
-  }))
-}
-
 
 variable "cluster_name" {
   description = "Name of the ECS cluster"
@@ -136,12 +120,6 @@ variable "service_name" {
 }
 
 variable "security_groups" {
-  description = "Security groups for ECS services"
-  type        = list(string)
-  default     = []
-}
-
-variable "security_group_ids" {
   description = "Security groups for ECS services"
   type        = list(string)
   default     = []
@@ -173,6 +151,26 @@ variable "ig_name" {
   description = "Internet Gateway Name"
   type        = string
 }
+
+variable "project" {
+  description = "Project Name"
+  type        = string
+}
+
+
+variable "codedeploy_configs" {
+  type = list(object({
+    app_name           = string
+    ecs_cluster_name   = string
+    ecs_service_name   = string
+  }))
+}
+
+
+
+
+
+
 
 
 

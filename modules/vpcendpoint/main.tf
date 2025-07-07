@@ -1,9 +1,37 @@
+resource "aws_security_group" "vpc_endpoint_sg" {
+  name        = "ecommerce-vpc-endpoint-sg"
+  description = "Security group for VPC endpoints"
+  vpc_id      = var.vpc_id
+
+  # Ingress: allow inbound HTTPS from ECS tasks security group
+  ingress {
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [var.ecs_security_group_id]
+  }
+
+  # Egress: allow all outbound HTTPS traffic to AWS service endpoints
+  egress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "ecommerce-vpc-endpoint-sg"
+  }
+}
+
+
+
 resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${var.region}.ecr.api"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
   tags = {
     Name = "ecommerce-api-endpoint"
@@ -15,7 +43,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name        = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
    tags = {
     Name = "ecommerce-dkr-endpoint"
@@ -27,7 +55,7 @@ resource "aws_vpc_endpoint" "ecs_sts" {
   service_name      = "com.amazonaws.${var.region}.sts"
   vpc_endpoint_type = "Interface"
   subnet_ids        = var.subnet_ids
-  security_group_ids = [var.security_group_id]
+  security_group_ids = [aws_security_group.vpc_endpoint_sg.id]
 
   private_dns_enabled = true
 
@@ -54,7 +82,7 @@ resource "aws_vpc_endpoint" "ecs" {
   service_name        = "com.amazonaws.${var.region}.ecs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
 
   tags = {
@@ -67,7 +95,7 @@ resource "aws_vpc_endpoint" "ecs_agent" {
   service_name        = "com.amazonaws.${var.region}.ecs-agent"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
 
   tags = {
@@ -80,7 +108,7 @@ resource "aws_vpc_endpoint" "ecs_telemetry" {
   service_name        = "com.amazonaws.${var.region}.ecs-telemetry"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
 
   tags = {
@@ -93,7 +121,7 @@ resource "aws_vpc_endpoint" "cloudwatch_logs" {
   service_name        = "com.amazonaws.${var.region}.logs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.subnet_ids
-  security_group_ids  = [var.security_group_id]
+  security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
 
   tags = {

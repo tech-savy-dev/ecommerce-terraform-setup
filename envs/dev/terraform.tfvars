@@ -65,30 +65,23 @@ codeartifact_repos = [
 domain_name = "ecommerce-domain"
 cluster_name = "dev-ecommerce-cluster"
 
-ecs_tasks = [
-  {
-    task_name        = "ecommerce-product-service"
-    task_family      = "ecommerce-task-family"
-    container_name   = "ecommerce-product-service-container"
-    image_url        = "677450898543.dkr.ecr.ap-southeast-1.amazonaws.com/ecommerce-product-service-dev:1ce5041" 
-    container_port   = 8080  # Port exposed by the container
-    service_name     = "ecommerce-product-service"
-    cpu              = "512"  
-    memory           = "1024"
-    assign_public_ip = false   # Add this attribute
-    desired_count    = 1
-  }
-]
 
-security_groups = []
 service_name = "ecommerce-shared"
-security_group_ids= ["sg-013e73820ac191a04"]
 region = "ap-southeast-1"
 website_name = "shophealthysnacks.com"
-san_names = ["www.shophealthysnacks.com"]
+san_names = ["*.shophealthysnacks.com"]
 alb_name = "ecommerce"
 ig_name = "ecommerce"
 
+codedeploy_configs = [
+  {
+    app_name           = "ecommerce-product-service"
+    ecs_cluster_name   = "dev-ecommerce-cluster"
+    ecs_service_name   = "ecommerce-product-service"
+  }
+]
+
+project = "ecommerce"
 
 
 

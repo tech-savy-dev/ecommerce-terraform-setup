@@ -24,11 +24,6 @@ variable "subnet_ids" {
   type        = list(string)
 }
 
-variable "security_groups" {
-  description = "Security groups for ECS services"
-  type        = list(string)
-  default     = []
-}
 
 variable "vpc_id" {
   description = "The VPC ID to associate with the ECS resources"
@@ -49,3 +44,19 @@ variable "region" {
   description = "Region for all"
   type        = string
 }
+
+variable "alb_sg_id" {
+  description = "Alb security group"
+  type        = string
+}
+
+variable "blue_target_group_arn" {
+  type        = string
+  description = "Target group ARN for the blue environment"
+}
+
+variable "green_target_group_arn" {
+  type        = string
+  description = "Target group ARN for the green environment"
+}
+

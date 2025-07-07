@@ -8,10 +8,6 @@ variable "subnet_ids" {
   description = "Private subnet IDs for the VPC endpoints"
 }
 
-variable "security_group_id" {
-  type        = string
-  description = "Security group to associate with VPC endpoints"
-}
 
 variable "region" {
   type        = string
@@ -22,3 +18,9 @@ variable "route_table_ids" {
   description = "List of route table IDs to associate with the S3 gateway endpoint"
   type        = list(string)
 }
+
+variable "ecs_security_group_id" {
+  description = "Ecs security group"
+  type        = string
+}
+

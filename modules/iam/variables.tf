@@ -9,5 +9,12 @@ variable "codebuild_role_names" {
   default     = []
 }
 
+variable "project" {
+  description = "Project name"
+  type        = string
+}
 
-
+variable "environment" {
+  description = "Environment name"
+  type        = string
+}

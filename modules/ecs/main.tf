@@ -13,53 +13,43 @@ resource "aws_ecs_task_definition" "this" {
   execution_role_arn       = var.ecs_execution_role_arn
 
   container_definitions = jsonencode([
-  {
-    name      = each.value.container_name
-    image     = each.value.image_url
-    portMappings = [
-      {
-        containerPort = each.value.container_port
-        protocol      = "tcp"
-      }
-    ]
-    logConfiguration = {
-      logDriver = "awslogs"
-      options = {
-        awslogs-group         = "/ecs/${each.value.service_name}"
-        awslogs-region        = var.region
-        awslogs-stream-prefix = "ecs"
+    {
+      name      = each.value.container_name
+      image     = each.value.image_url
+      portMappings = [
+        {
+          containerPort = each.value.container_port
+          protocol      = "tcp"
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = "/ecs/${each.value.service_name}"
+          awslogs-region        = var.region
+          awslogs-stream-prefix = "ecs"
+        }
       }
     }
-  }
-])
+  ])
 }
 
 resource "aws_security_group" "ecs_security_group" {
-  count       = length(var.security_groups) > 0 ? 0 : 1  # Only create if no security groups are passed
   name        = "${var.service_name}-ecs-sg"
   description = "Security group for ECS services"
   vpc_id      = var.vpc_id
 
-  # Inbound Rules (Ingress)
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [var.alb_sg_id]
   }
 
-  ingress {
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Outbound Rules (Egress)
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"  # Allow all outbound traffic
+    protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -77,10 +67,22 @@ resource "aws_ecs_service" "this" {
   desired_count   = each.value.desired_count
   launch_type     = "FARGATE"
 
+  # ✅ Use CodeDeploy
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
   network_configuration {
-    subnets         = var.subnet_ids
-    security_groups = [aws_security_group.ecs_security_group[0].id] 
+    subnets          = var.subnet_ids
+    security_groups  = [aws_security_group.ecs_security_group.id]
     assign_public_ip = each.value.assign_public_ip
+  }
+
+  # ✅ Wire only BLUE target group to start (CodeDeploy handles switching)
+  load_balancer {
+    target_group_arn = var.blue_target_group_arn
+    container_name   = each.value.container_name
+    container_port   = each.value.container_port
   }
 }
 
