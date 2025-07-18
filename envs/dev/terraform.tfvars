@@ -11,14 +11,13 @@ private_subnet_cidrs = [
 ]
 availability_zones = ["ap-southeast-1a", "ap-southeast-1b"]
 subnet_name  = "ecommerce-subnet"
-ecr_repository_name= "ecommerce-product-service"
 environment = "dev"
 github_token = "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"
 repo_owner = "tech-savy-dev"
 branch = "main"
 build_project_name  = "ecommerce-product-service-build"
 buildspec_location  = "buildspec.yaml"
-codestar_connection_arn = "arn:aws:codeconnections:ap-southeast-1:677450898543:connection/4bc6658a-e62c-4944-8c20-30614e16b8a4"
+codestar_connection_arn = "arn:aws:codeconnections:ap-southeast-1:677450898543:connection/18e78ce7-7400-422b-bbcb-a771a52e8d65"
 pipelines = [
   {
     pipeline_name = "ecommerce-parent-service"
@@ -29,6 +28,17 @@ pipelines = [
     pipeline_name = "ecommerce-product-service"
     repo_name     = "ecommerce-product-service"
     build_project_name  = "dev-ecommerce-product-service-build"
+    enable_deploy_stage   = true
+    codedeploy_app_name   = "ecommerce-product-service"
+    codedeploy_group_name = "ecommerce-product-service-dg"
+  },
+  {
+    pipeline_name = "ecommerce-auth-service"
+    repo_name     = "ecommerce-auth-service"
+    build_project_name  = "dev-ecommerce-auth-service-build"
+    enable_deploy_stage   = true
+    codedeploy_app_name   = "ecommerce-auth-service"
+    codedeploy_group_name = "ecommerce-auth-service-dg"
   } 
 ]
 
@@ -39,6 +49,10 @@ codebuild_projects = [
   },
   {
     build_project_name = "dev-ecommerce-product-service-build"
+    buildspec_location = "buildspec.yaml"
+  },
+  {
+    build_project_name = "dev-ecommerce-auth-service-build"
     buildspec_location = "buildspec.yaml"
   }
 ]
@@ -55,8 +69,13 @@ codeartifact_repos = [
     external_connections  = ["public:maven-central"]
   },
   {
+    repository_name       = "ecommerce-auth-artifacts"
+    upstream_repositories = []
+    external_connections  = ["public:maven-central"]
+  },
+  {
     repository_name       = "ecommerce-shared"
-    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-product-artifacts"]
+    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-product-artifacts","ecommerce-auth-artifacts"]
     external_connections  = null
   }
 ]
@@ -72,14 +91,6 @@ website_name = "shophealthysnacks.com"
 san_names = ["*.shophealthysnacks.com"]
 alb_name = "ecommerce"
 ig_name = "ecommerce"
-
-codedeploy_configs = [
-  {
-    app_name           = "ecommerce-product-service"
-    ecs_cluster_name   = "dev-ecommerce-cluster"
-    ecs_service_name   = "ecommerce-product-service"
-  }
-]
 
 project = "ecommerce"
 

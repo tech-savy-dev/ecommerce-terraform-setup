@@ -1,6 +1,11 @@
-resource "aws_ecr_repository" "this" {
-  name = "${var.ecr_repository_name}-${var.environment}"
+locals {
+  all_repositories = concat(var.ecr_existing, var.ecr_to_create)
+}
 
+resource "aws_ecr_repository" "this" {
+  for_each = { for name in var.ecr_to_create : name => name }
+
+  name                 = each.value
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
@@ -9,6 +14,6 @@ resource "aws_ecr_repository" "this" {
 
   tags = {
     Environment = var.environment
-    Name        = "${var.ecr_repository_name}-${var.environment}"
+    Name        = each.value
   }
 }

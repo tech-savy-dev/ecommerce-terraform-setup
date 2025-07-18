@@ -13,21 +13,6 @@ variable "public_subnets" {
   type        = list(string)
 }
 
-variable "target_group_port" {
-  description = "Port on which target group will receive traffic"
-  type        = number
-}
-
-variable "target_type" {
-  description = "Target type for the target group (e.g., ip, instance, lambda)"
-  type        = string
-}
-
-variable "health_check_path" {
-  description = "Path for health check"
-  type        = string
-}
-
 variable "certificate_arn" {
   description = "ARN of the ACM certificate for HTTPS"
   type        = string
@@ -36,4 +21,9 @@ variable "certificate_arn" {
 variable "environment" {
   description = "Environment"
   type        = string
+}
+
+variable "blue_target_group_arns" {
+  type = map(string)
+  description = "Map of service_name to blue target group ARN"
 }

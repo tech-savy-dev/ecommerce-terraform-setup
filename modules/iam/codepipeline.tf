@@ -13,6 +13,30 @@ resource "aws_iam_role" "pipeline_role" {
   })
 }
 
+resource "aws_iam_role_policy" "pipeline_codedeploy_policy" {
+  name = "CodeDeployPermissions"
+  role = aws_iam_role.pipeline_role.name
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "codedeploy:CreateDeployment",
+          "codedeploy:GetApplication",
+          "codedeploy:GetApplicationRevision",
+          "codedeploy:GetDeployment",
+          "codedeploy:GetDeploymentConfig",
+          "codedeploy:RegisterApplicationRevision",
+          "codedeploy:StopDeployment"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_role_policy" "codestar_policy" {
   name = "Allow-CodeStarConnection"
   role = aws_iam_role.pipeline_role.name
@@ -30,7 +54,6 @@ resource "aws_iam_role_policy" "codestar_policy" {
     ]
   })
 }
-
 
 resource "aws_iam_role_policy_attachment" "codepipeline_full_access" {
   role       = aws_iam_role.pipeline_role.name
@@ -51,4 +74,3 @@ resource "aws_iam_role_policy_attachment" "codepipeline_ecr_access" {
   role       = aws_iam_role.pipeline_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
 }
-

@@ -11,12 +11,13 @@ output "private_subnet_ids" {
   value = module.subnets.private_subnet_ids
 }
 
-output "repository_url" {
-  value  = module.ecr.repository_url
+
+output "ecr_repository_names" {
+  value = module.ecr.repository_names
 }
 
-output "repository_name" {
-  value  = module.ecr.repository_name
+output "ecr_repository_urls" {
+  value = module.ecr.repository_urls
 }
 
 output "debug_role_arns" {

@@ -1,3 +1,4 @@
+
 resource "aws_ecs_cluster" "this" {
   name = var.cluster_name
 }
@@ -43,13 +44,13 @@ resource "aws_security_group" "ecs_security_group" {
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = [var.alb_sg_id]
+    security_groups = [var.alb_sg_id]  # Allow traffic from ALB security group
   }
 
   egress {
     from_port   = 0
     to_port     = 0
-    protocol    = "-1"
+    protocol    = "-1"   # Allow all outbound traffic
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -67,9 +68,8 @@ resource "aws_ecs_service" "this" {
   desired_count   = each.value.desired_count
   launch_type     = "FARGATE"
 
-  # ✅ Use CodeDeploy
   deployment_controller {
-    type = "CODE_DEPLOY"
+    type = each.value.use_codedeploy ? "CODE_DEPLOY" : "ECS"
   }
 
   network_configuration {
@@ -78,11 +78,21 @@ resource "aws_ecs_service" "this" {
     assign_public_ip = each.value.assign_public_ip
   }
 
-  # ✅ Wire only BLUE target group to start (CodeDeploy handles switching)
-  load_balancer {
-    target_group_arn = var.blue_target_group_arn
-    container_name   = each.value.container_name
-    container_port   = each.value.container_port
+   dynamic "load_balancer" {
+    for_each = each.value.use_codedeploy ? [1] : []
+    content {
+      target_group_arn = var.blue_target_group_arns[each.key]
+      container_name   = each.value.container_name
+      container_port   = each.value.container_port
+    }
+  }
+
+
+  lifecycle {
+    ignore_changes = [
+      task_definition,
+      desired_count
+    ]
   }
 }
 

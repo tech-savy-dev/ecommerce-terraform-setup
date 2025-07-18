@@ -41,3 +41,21 @@ variable "codeartifact_policy_arn" {
   description = "IAM policy ARN for accessing AWS CodeArtifact"
   type        = string
 }
+
+variable "enable_deploy_stage" {
+  type        = bool
+  description = "Whether to enable deploy stage"
+  default     = false
+}
+
+variable "codedeploy_app_name" {
+  type        = string
+  description = "CodeDeploy ECS Application name"
+  default     = ""
+}
+
+variable "codedeploy_group_name" {
+  type        = string
+  description = "CodeDeploy ECS Deployment group name"
+  default     = ""
+}

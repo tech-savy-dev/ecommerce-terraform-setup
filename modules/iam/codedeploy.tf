@@ -20,8 +20,8 @@ name = "codedeploy-role-${var.project}-${var.environment}"
 }
 
 resource "aws_iam_role_policy" "codedeploy_policy" {
-  name   = "codedeploy-role-${var.project}-${var.environment}-policy"
-  role   = aws_iam_role.codedeploy_role.id
+  name = "codedeploy-role-${var.project}-${var.environment}-policy"
+  role = aws_iam_role.codedeploy_role.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -34,11 +34,8 @@ resource "aws_iam_role_policy" "codedeploy_policy" {
           "ecs:DeleteTaskSet",
           "ecs:DescribeTaskSets",
           "ecs:UpdateTaskSet",
-          "elasticloadbalancing:DeregisterTargets",
-          "elasticloadbalancing:RegisterTargets",
-          "elasticloadbalancing:DescribeTargetGroups",
-          "elasticloadbalancing:DescribeListeners",
-          "elasticloadbalancing:DescribeTargetHealth",
+          "ecs:UpdateServicePrimaryTaskSet",
+          "elasticloadbalancing:*",
           "cloudwatch:PutMetricAlarm",
           "cloudwatch:DescribeAlarms",
           "cloudwatch:DeleteAlarms",
@@ -50,6 +47,27 @@ resource "aws_iam_role_policy" "codedeploy_policy" {
           "autoscaling:RecordLifecycleActionHeartbeat"
         ]
         Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:PassRole"
+        ]
+        Resource = [
+          aws_iam_role.ecs_execution_role.arn
+        ]
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:GetObject",
+          "s3:GetObjectVersion",
+          "s3:GetBucketVersioning"
+        ]
+        Resource = [
+          "arn:aws:s3:::${var.artifact_bucket}",
+          "arn:aws:s3:::${var.artifact_bucket}/*"
+        ]
       }
     ]
   })

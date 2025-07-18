@@ -18,3 +18,10 @@ variable "environment" {
   description = "Environment name"
   type        = string
 }
+
+variable "artifact_bucket" {
+  description = "Artifact Bucket"
+  type        = string
+}
+
+

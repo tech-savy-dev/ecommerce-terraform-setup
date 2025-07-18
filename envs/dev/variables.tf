@@ -47,11 +47,6 @@ variable "vpc_cidr" {
   type        = string
 }
 
-variable "ecr_repository_name" {
-  description = "AWS ECR Repository Name"
-  type        = string
-}
-
 
 variable "github_token" {
   type = string
@@ -90,6 +85,9 @@ variable "pipelines" {
     pipeline_name       = string
     repo_name           = string
     build_project_name  = string
+    enable_deploy_stage   = optional(bool, false)
+    codedeploy_app_name   = optional(string)
+    codedeploy_group_name = optional(string)
   }))
 }
 
@@ -158,13 +156,13 @@ variable "project" {
 }
 
 
-variable "codedeploy_configs" {
-  type = list(object({
-    app_name           = string
-    ecs_cluster_name   = string
-    ecs_service_name   = string
-  }))
+variable "use_codedeploy" {
+  description = "Whether to use CodeDeploy deployment controller"
+  type        = bool
+  default     = false
 }
+
+
 
 
 

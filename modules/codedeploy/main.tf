@@ -1,6 +1,22 @@
+resource "aws_lb_listener_rule" "service_route" {
+  listener_arn = var.https_listener_arn
+  priority     = var.priority
+
+  condition {
+    path_pattern {
+      values = [var.path_pattern]
+    }
+  }
+
+  action {
+    type             = "forward"
+    target_group_arn = var.blue_target_group_arn
+  }
+}
+
 resource "aws_codedeploy_app" "ecs_app" {
-  name              = var.app_name
-  compute_platform  = "ECS"
+  name             = var.app_name
+  compute_platform = "ECS"
 }
 
 resource "aws_codedeploy_deployment_group" "ecs_deployment_group" {
@@ -38,20 +54,17 @@ resource "aws_codedeploy_deployment_group" "ecs_deployment_group" {
 
   blue_green_deployment_config {
     terminate_blue_instances_on_deployment_success {
-      action                          = "TERMINATE"
+      action                           = "TERMINATE"
       termination_wait_time_in_minutes = 0
     }
 
     deployment_ready_option {
       action_on_timeout = "CONTINUE_DEPLOYMENT"
     }
-
   }
 
   auto_rollback_configuration {
     enabled = true
     events  = ["DEPLOYMENT_FAILURE"]
   }
-
-  tags = var.tags
 }

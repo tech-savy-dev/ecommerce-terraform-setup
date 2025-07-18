@@ -1,9 +1,13 @@
-output "repository_url" {
-  description = "The URL of the created ECR repository"
-  value       = aws_ecr_repository.this.repository_url
+output "repository_names" {
+  value = local.all_repositories
 }
 
-output "repository_name" {
-  description = "The full name of the ECR repository"
-  value       = aws_ecr_repository.this.name
+output "repository_urls" {
+  value = merge({
+    for name, repo in aws_ecr_repository.this :
+    name => repo.repository_url
+  }, {
+    for name in var.ecr_existing :
+    name => "imported-${name}" # placeholder, replace if needed
+  })
 }
