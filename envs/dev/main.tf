@@ -269,6 +269,20 @@ module "ecs" {
   blue_target_group_arns = local.blue_target_group_arns
 }
 
+module "natgw" {
+  source = "../../modules/natgw"
+
+  name              = "dev"
+  env               = "dev"
+  vpc_id            = module.vpc.vpc_id
+  azs               = var.availability_zones
+  public_subnet_ids = module.subnets.public_subnet_ids
+  private_subnet_ids = module.subnets.private_subnet_ids
+  private_route_table_ids = module.subnets.private_route_table_ids
+
+  natgw_per_az = false # ✅ only 1 NAT Gateway for cost-saving (true==span1 angw for 1 az)
+}
+
  
 
 
