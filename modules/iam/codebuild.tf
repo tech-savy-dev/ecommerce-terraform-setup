@@ -65,3 +65,30 @@ resource "aws_iam_role_policy" "codebuild_ecs_access" {
     ]
   })
 }
+
+# Optional inline policy to allow CodeBuild roles to upload to the website bucket
+resource "aws_iam_role_policy" "codebuild_website_s3_access" {
+  for_each = var.website_bucket != "" ? aws_iam_role.codebuild_role : {}
+  name     = "${each.key}-website-s3-access"
+  role     = each.value.name
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObject",
+          "s3:DeleteObject",
+          "s3:ListBucket"
+        ],
+        Resource = [
+          "arn:aws:s3:::${var.website_bucket}",
+          "arn:aws:s3:::${var.website_bucket}/*"
+        ]
+      }
+    ]
+  })
+}

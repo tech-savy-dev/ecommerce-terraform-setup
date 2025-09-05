@@ -24,4 +24,10 @@ variable "artifact_bucket" {
   type        = string
 }
 
+variable "website_bucket" {
+  description = "Optional website S3 bucket name to grant CodeBuild access for uploading UI assets"
+  type        = string
+  default     = ""
+}
+
 

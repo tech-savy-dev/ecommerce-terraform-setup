@@ -74,8 +74,13 @@ codeartifact_repos = [
     external_connections  = ["public:maven-central"]
   },
   {
+    repository_name       = "ecommerce-common-lib-artifacts"
+    upstream_repositories = []
+    external_connections  = ["public:maven-central"]
+  },
+  {
     repository_name       = "ecommerce-shared"
-    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-product-artifacts","ecommerce-auth-artifacts"]
+    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-product-artifacts","ecommerce-auth-artifacts","ecommerce-common-lib-artifacts"]
     external_connections  = null
   }
 ]

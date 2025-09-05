@@ -15,3 +15,9 @@ variable "codeartifact_policy_arn" {
   description = "IAM policy ARN for accessing AWS CodeArtifact"
   type        = string
 }
+
+variable "website_bucket" {
+  description = "Optional S3 bucket name for website hosting to be passed as env var to builds"
+  type        = string
+  default     = ""
+}

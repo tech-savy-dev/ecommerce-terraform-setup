@@ -18,5 +18,13 @@ resource "aws_codebuild_project" "maven_project" {
     image           = "aws/codebuild/standard:7.0"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
+    dynamic "environment_variable" {
+      for_each = var.website_bucket != "" ? [var.website_bucket] : []
+      content {
+        name  = "WEBSITE_BUCKET"
+        value = environment_variable.value
+        type  = "PLAINTEXT"
+      }
+    }
   }
 }

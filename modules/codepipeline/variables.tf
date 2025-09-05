@@ -42,6 +42,12 @@ variable "codeartifact_policy_arn" {
   type        = string
 }
 
+variable "website_bucket" {
+  description = "Optional S3 bucket name for website hosting"
+  type        = string
+  default     = ""
+}
+
 variable "enable_deploy_stage" {
   type        = bool
   description = "Whether to enable deploy stage"

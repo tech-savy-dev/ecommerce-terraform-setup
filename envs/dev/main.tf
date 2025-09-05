@@ -36,12 +36,20 @@ module "artifact_bucket" {
   environment = var.environment
 }
 
+module "website_bucket" {
+  source      = "../../modules/website_bucket"
+  bucket_name = "ecommerce-web-ui-${var.environment}-${data.aws_caller_identity.current.account_id}"
+  environment = var.environment
+  enable_website = true
+}
+
 module "iam" {
   source                 = "../../modules/iam"
   codestar_connection_arn = var.codestar_connection_arn
   project     = var.project
   environment = var.environment
   artifact_bucket         = module.artifact_bucket.bucket_name
+  website_bucket          = module.website_bucket.bucket_name
   codebuild_role_names    = [
     "codebuild-role-dev-ecommerce-parent-pom-build",
     "codebuild-role-dev-ecommerce-product-service-build",
@@ -58,10 +66,25 @@ resource "aws_codeartifact_domain" "ecommerce" {
   }
 }
 
-module "codeartifact" {
+module "codeartifact_base" {
   for_each = {
     for repo in var.codeartifact_repos :
     repo.repository_name => repo
+    if length(try(repo.upstream_repositories, [])) == 0
+  }
+
+  source                = "../../modules/codeartifact"
+  domain_name           = aws_codeartifact_domain.ecommerce.domain
+  repository_name       = each.value.repository_name
+  upstream_repositories = []
+  external_connections  = lookup(each.value, "external_connections", null)
+}
+
+module "codeartifact_with_upstreams" {
+  for_each = {
+    for repo in var.codeartifact_repos :
+    repo.repository_name => repo
+    if length(try(repo.upstream_repositories, [])) > 0
   }
 
   source                = "../../modules/codeartifact"
@@ -69,6 +92,8 @@ module "codeartifact" {
   repository_name       = each.value.repository_name
   upstream_repositories = lookup(each.value, "upstream_repositories", [])
   external_connections  = lookup(each.value, "external_connections", null)
+
+  depends_on = [module.codeartifact_base]
 }
 
 module "codebuild_project" {
@@ -82,6 +107,7 @@ module "codebuild_project" {
   buildspec_location       = each.value.buildspec_location
   service_role_arn = module.iam.role_arns["codebuild-role-${each.key}"]
   codeartifact_policy_arn  = module.iam.codeartifact_access_policy_arn
+  website_bucket           = module.website_bucket.bucket_name
 }
 
 
@@ -101,6 +127,7 @@ module "codepipeline" {
   codestar_connection_arn = var.codestar_connection_arn
   service_role_arn        = module.iam.role_arn_pipeline
   codeartifact_policy_arn = module.iam.codeartifact_access_policy_arn
+  website_bucket          = module.website_bucket.bucket_name
 
   enable_deploy_stage     = try(each.value.enable_deploy_stage, false)
   codedeploy_app_name     = try(each.value.codedeploy_app_name, "")

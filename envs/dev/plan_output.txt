@@ -1,0 +1,338 @@
+module.iam.data.aws_caller_identity.current: Reading...
+module.ecs.aws_ecs_cluster.this: Refreshing state... [id=arn:aws:ecs:ap-southeast-1:677450898543:cluster/dev-ecommerce-cluster]
+module.codeartifact["ecommerce-shared"].aws_codeartifact_repository.this: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-shared]
+aws_codeartifact_domain.ecommerce: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:domain/ecommerce-domain]
+module.codeartifact["ecommerce-common-lib-artifacts"].aws_codeartifact_repository.this: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-common-lib-artifacts]
+module.codeartifact["ecommerce-parent-artifacts"].aws_codeartifact_repository.this: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-parent-artifacts]
+module.ecr.aws_ecr_repository.this["dev-ecommerce-auth-service"]: Refreshing state... [id=dev-ecommerce-auth-service]
+module.codeartifact["ecommerce-product-artifacts"].aws_codeartifact_repository.this: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-product-artifacts]
+module.ecr.aws_ecr_repository.this["dev-ecommerce-product-service"]: Refreshing state... [id=dev-ecommerce-product-service]
+module.codeartifact["ecommerce-auth-artifacts"].aws_codeartifact_repository.this: Refreshing state... [id=arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-auth-artifacts]
+module.iam.data.aws_caller_identity.current: Read complete after 1s [id=677450898543]
+module.vpc.aws_vpc.main: Refreshing state... [id=vpc-0a438cf0e3681a6b7]
+module.natgw.aws_eip.nat[0]: Refreshing state... [id=eipalloc-0c22ae9652acdf6c5]
+module.iam.aws_iam_role.pipeline_role: Refreshing state... [id=codepipeline-role]
+module.iam.aws_iam_policy.codeartifact_access: Refreshing state... [id=arn:aws:iam::677450898543:policy/CodeArtifactAccessPolicy]
+module.iam.aws_iam_role.codebuild_role["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build]
+module.iam.aws_iam_role.codebuild_role["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build]
+module.iam.aws_iam_role.codebuild_role["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build]
+module.iam.aws_iam_role.codedeploy_role: Refreshing state... [id=codedeploy-role-ecommerce-dev]
+module.iam.aws_iam_role.ecs_execution_role: Refreshing state... [id=ecs-execution-role]
+module.acm.aws_acm_certificate.cert: Refreshing state... [id=arn:aws:acm:ap-southeast-1:677450898543:certificate/b8665e66-d925-4b5c-b72d-90d46415f11a]
+data.aws_caller_identity.current: Reading...
+data.aws_caller_identity.current: Read complete after 0s [id=677450898543]
+module.ecs.aws_cloudwatch_log_group.ecs_logs["ecommerce-auth-service"]: Refreshing state... [id=/ecs/ecommerce-auth-service]
+module.ecs.aws_cloudwatch_log_group.ecs_logs["ecommerce-product-service"]: Refreshing state... [id=/ecs/ecommerce-product-service]
+module.iam.aws_iam_policy.ecs_cloudwatch_logs_policy: Refreshing state... [id=arn:aws:iam::677450898543:policy/ecs-cloudwatch-logs-policy]
+module.vpc.aws_internet_gateway.igw: Refreshing state... [id=igw-0f611a7b5936bbe44]
+module.artifact_bucket.aws_s3_bucket.artifact_bucket: Refreshing state... [id=ecommerce-artifacts-dev-677450898543]
+module.website_bucket.aws_s3_bucket.website: Refreshing state... [id=ecommerce-web-ui-dev-677450898543]
+module.vpc.aws_route_table.public: Refreshing state... [id=rtb-01137036b25eaf66e]
+module.target_groups.aws_lb_target_group.blue["ecommerce-auth-service"]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:targetgroup/ecommerce-auth-blue-tg/32abbf9d7b5665db]
+module.target_groups.aws_lb_target_group.blue["ecommerce-product-service"]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:targetgroup/ecommerce-product-blue-tg/5b1cf232413d61c2]
+module.target_groups.aws_lb_target_group.green["ecommerce-auth-service"]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:targetgroup/ecommerce-auth-green-tg/df3e55f7aef6725b]
+module.target_groups.aws_lb_target_group.green["ecommerce-product-service"]: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:targetgroup/ecommerce-product-green-tg/c334fb7de240c626]
+module.subnets.aws_route_table.private[1]: Refreshing state... [id=rtb-0e47cba2a07598d6e]
+module.subnets.aws_route_table.private[0]: Refreshing state... [id=rtb-0b898cc4511694f26]
+module.subnets.aws_route_table.public[0]: Refreshing state... [id=rtb-01dc71234ef33031c]
+module.subnets.aws_route_table.public[1]: Refreshing state... [id=rtb-0dc351ae97ec040b1]
+module.alb.aws_security_group.alb_sg: Refreshing state... [id=sg-032ccd145b13b3314]
+module.subnets.aws_subnet.private[1]: Refreshing state... [id=subnet-024fc09875c0cc08c]
+module.subnets.aws_subnet.private[0]: Refreshing state... [id=subnet-0486f007af166aeef]
+module.subnets.aws_subnet.public[0]: Refreshing state... [id=subnet-02dd2e9ccd2a8635f]
+module.subnets.aws_subnet.public[1]: Refreshing state... [id=subnet-029957ad768d2f976]
+module.iam.aws_iam_role_policy_attachment.ecs_ecr_read_policy: Refreshing state... [id=ecs-execution-role-20250702023319619300000001]
+module.iam.aws_iam_role_policy_attachment.ecs_execution_policy: Refreshing state... [id=ecs-execution-role-20250701145000049300000002]
+module.iam.aws_iam_role_policy_attachment.ecs_cloudwatch_logs_attachment: Refreshing state... [id=ecs-execution-role-20250702070928664500000001]
+module.website_bucket.aws_s3_bucket_public_access_block.website_block: Refreshing state... [id=ecommerce-web-ui-dev-677450898543]
+module.website_bucket.aws_s3_bucket_website_configuration.website_cfg: Refreshing state... [id=ecommerce-web-ui-dev-677450898543]
+module.website_bucket.aws_s3_bucket_policy.website_policy[0]: Refreshing state... [id=ecommerce-web-ui-dev-677450898543]
+module.website_bucket.aws_s3_bucket_lifecycle_configuration.website_lifecycle: Refreshing state... [id=ecommerce-web-ui-dev-677450898543]
+module.subnets.aws_route.public_internet_access[0]: Refreshing state... [id=r-rtb-01dc71234ef33031c1080289494]
+module.subnets.aws_route.public_internet_access[1]: Refreshing state... [id=r-rtb-0dc351ae97ec040b11080289494]
+module.iam.aws_iam_role_policy_attachment.codepipeline_s3_access: Refreshing state... [id=codepipeline-role-20250629144147447900000007]
+module.iam.aws_iam_role_policy.codestar_policy: Refreshing state... [id=codepipeline-role:Allow-CodeStarConnection]
+module.iam.aws_iam_role_policy.pipeline_codedeploy_policy: Refreshing state... [id=codepipeline-role:CodeDeployPermissions]
+module.iam.aws_iam_role_policy_attachment.codepipeline_full_access: Refreshing state... [id=codepipeline-role-20250629144147441800000006]
+module.iam.aws_iam_role_policy_attachment.codepipeline_ecr_access: Refreshing state... [id=codepipeline-role-20250629144147769300000008]
+module.iam.aws_iam_role_policy_attachment.codepipeline_codebuild_access: Refreshing state... [id=codepipeline-role-20250629144147243800000005]
+module.subnets.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-076c5e11a45ec3327]
+module.subnets.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0b2d62fc6ebfa7046]
+module.subnets.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-0940efaec03b9276c]
+module.subnets.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-017e05f4db5b82111]
+module.ecs.aws_ecs_task_definition.this["ecommerce-product-service"]: Refreshing state... [id=ecommerce-task-family]
+module.ecs.aws_ecs_task_definition.this["ecommerce-auth-service"]: Refreshing state... [id=ecommerce-task-family]
+module.iam.aws_iam_role_policy.codebuild_ecs_access["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build:codebuild-role-dev-ecommerce-product-service-build-ecs-access]
+module.iam.aws_iam_role_policy.codebuild_ecs_access["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build:codebuild-role-dev-ecommerce-auth-service-build-ecs-access]
+module.iam.aws_iam_role_policy.codebuild_ecs_access["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build:codebuild-role-dev-ecommerce-parent-pom-build-ecs-access]
+module.iam.aws_iam_role_policy_attachment.codebuild_s3_access["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build-20250630132230975100000004]
+module.iam.aws_iam_role_policy_attachment.codebuild_s3_access["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build-20250708145031778400000004]
+module.iam.aws_iam_role_policy_attachment.codebuild_s3_access["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build-20250630132230946800000001]
+module.iam.aws_iam_role_policy_attachment.codebuild_cloudwatch_logs["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build-20250708145031370800000002]
+module.iam.aws_iam_role_policy_attachment.codebuild_cloudwatch_logs["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build-20250630132231000100000006]
+module.iam.aws_iam_role_policy_attachment.codebuild_cloudwatch_logs["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build-20250630132230991800000005]
+module.iam.aws_iam_role_policy_attachment.attach_codeartifact_policy["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build-20250630132928120900000001]
+module.iam.aws_iam_role_policy_attachment.attach_codeartifact_policy["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build-20250630132928139100000002]
+module.iam.aws_iam_role_policy_attachment.attach_codeartifact_policy["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build-20250708145031062400000001]
+module.iam.aws_iam_role_policy_attachment.codebuild_codepipeline_access["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build-20250630132230952800000002]
+module.iam.aws_iam_role_policy_attachment.codebuild_codepipeline_access["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build-20250708145031675900000003]
+module.iam.aws_iam_role_policy_attachment.codebuild_codepipeline_access["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build-20250630132231255300000008]
+module.iam.aws_iam_role_policy_attachment.codebuild_ecr_access["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build-20250630132231254800000007]
+module.iam.aws_iam_role_policy_attachment.codebuild_ecr_access["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build-20250708145031810500000005]
+module.iam.aws_iam_role_policy_attachment.codebuild_ecr_access["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build-20250630132230957600000003]
+module.iam.aws_iam_role_policy.codebuild_website_s3_access["codebuild-role-dev-ecommerce-auth-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-auth-service-build:codebuild-role-dev-ecommerce-auth-service-build-website-s3-access]
+module.iam.aws_iam_role_policy.codebuild_website_s3_access["codebuild-role-dev-ecommerce-parent-pom-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-parent-pom-build:codebuild-role-dev-ecommerce-parent-pom-build-website-s3-access]
+module.iam.aws_iam_role_policy.codebuild_website_s3_access["codebuild-role-dev-ecommerce-product-service-build"]: Refreshing state... [id=codebuild-role-dev-ecommerce-product-service-build:codebuild-role-dev-ecommerce-product-service-build-website-s3-access]
+module.iam.aws_iam_role_policy.codedeploy_policy: Refreshing state... [id=codedeploy-role-ecommerce-dev:codedeploy-role-ecommerce-dev-policy]
+module.vpcendpoint.aws_vpc_endpoint.s3_gateway: Refreshing state... [id=vpce-03f8c04966f4e8b6e]
+module.ecs.aws_security_group.ecs_security_group: Refreshing state... [id=sg-013e73820ac191a04]
+module.alb.aws_lb.alb: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:loadbalancer/app/ecommerce-alb/694afd282ef9fa6b]
+module.natgw.aws_nat_gateway.this[0]: Refreshing state... [id=nat-03dd9639e7dd801b2]
+module.codebuild_project["dev-ecommerce-parent-pom-build"].aws_codebuild_project.maven_project: Refreshing state... [id=arn:aws:codebuild:ap-southeast-1:677450898543:project/dev-ecommerce-parent-pom-build]
+module.codebuild_project["dev-ecommerce-product-service-build"].aws_codebuild_project.maven_project: Refreshing state... [id=arn:aws:codebuild:ap-southeast-1:677450898543:project/dev-ecommerce-product-service-build]
+module.codebuild_project["dev-ecommerce-auth-service-build"].aws_codebuild_project.maven_project: Refreshing state... [id=arn:aws:codebuild:ap-southeast-1:677450898543:project/dev-ecommerce-auth-service-build]
+module.codedeploy["ecommerce-product-service"].aws_codedeploy_app.ecs_app: Refreshing state... [id=fea2f2ad-97e2-4361-8ac8-e1f8dbdc65a4:ecommerce-product-service]
+module.codedeploy["ecommerce-auth-service"].aws_codedeploy_app.ecs_app: Refreshing state... [id=eea865e7-bc88-4da0-a33c-6fa625ea9bd7:ecommerce-auth-service]
+module.natgw.aws_route.private_nat_route[0]: Refreshing state... [id=r-rtb-0b898cc4511694f261080289494]
+module.natgw.aws_route.private_nat_route[1]: Refreshing state... [id=r-rtb-0e47cba2a07598d6e1080289494]
+module.ecs.aws_ecs_service.this["ecommerce-auth-service"]: Refreshing state... [id=arn:aws:ecs:ap-southeast-1:677450898543:service/dev-ecommerce-cluster/ecommerce-auth-service]
+module.ecs.aws_ecs_service.this["ecommerce-product-service"]: Refreshing state... [id=arn:aws:ecs:ap-southeast-1:677450898543:service/dev-ecommerce-cluster/ecommerce-product-service]
+module.vpcendpoint.aws_security_group.vpc_endpoint_sg: Refreshing state... [id=sg-0436809cc5f77fdaf]
+module.alb.aws_lb_listener.https: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:listener/app/ecommerce-alb/694afd282ef9fa6b/14b24406d2cd2b12]
+module.alb.aws_lb_listener.http: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:listener/app/ecommerce-alb/694afd282ef9fa6b/d5e49e257ea47997]
+module.vpcendpoint.aws_vpc_endpoint.ecs_agent: Refreshing state... [id=vpce-0a7e5d00c180bc4d6]
+module.vpcendpoint.aws_vpc_endpoint.ecr_api: Refreshing state... [id=vpce-0bed2c0f98c28e59b]
+module.vpcendpoint.aws_vpc_endpoint.ecs_sts: Refreshing state... [id=vpce-073b986d96502a0bb]
+module.vpcendpoint.aws_vpc_endpoint.ecs: Refreshing state... [id=vpce-037bf331efe0fad5f]
+module.vpcendpoint.aws_vpc_endpoint.ecr_dkr: Refreshing state... [id=vpce-07a87aae4b92d48ad]
+module.vpcendpoint.aws_vpc_endpoint.cloudwatch_logs: Refreshing state... [id=vpce-0edf47c202a517d47]
+module.vpcendpoint.aws_vpc_endpoint.ecs_telemetry: Refreshing state... [id=vpce-0867a30daa7bb6f32]
+module.codepipeline["ecommerce-product-service"].aws_codepipeline.pipeline: Refreshing state... [id=ecommerce-product-service]
+module.codepipeline["ecommerce-parent-service"].aws_codepipeline.pipeline: Refreshing state... [id=ecommerce-parent-service]
+module.codepipeline["ecommerce-auth-service"].aws_codepipeline.pipeline: Refreshing state... [id=ecommerce-auth-service]
+module.codedeploy["ecommerce-product-service"].aws_codedeploy_deployment_group.ecs_deployment_group: Refreshing state... [id=fbcc535c-50ae-4dec-9f85-e0a691c3289a]
+module.codedeploy["ecommerce-auth-service"].aws_codedeploy_deployment_group.ecs_deployment_group: Refreshing state... [id=9810fa41-43cd-48f3-91cb-c797c97de182]
+module.codedeploy["ecommerce-product-service"].aws_lb_listener_rule.service_route: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:listener-rule/app/ecommerce-alb/694afd282ef9fa6b/14b24406d2cd2b12/f052eb325feabf93]
+module.codedeploy["ecommerce-auth-service"].aws_lb_listener_rule.service_route: Refreshing state... [id=arn:aws:elasticloadbalancing:ap-southeast-1:677450898543:listener-rule/app/ecommerce-alb/694afd282ef9fa6b/14b24406d2cd2b12/6ba66bd4cab7ebfb]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  + create
+  - destroy
+
+Terraform will perform the following actions:
+
+  # module.codeartifact["ecommerce-auth-artifacts"].aws_codeartifact_repository.this will be destroyed
+  # (because aws_codeartifact_repository.this is not in configuration)
+  - resource "aws_codeartifact_repository" "this" {
+      - administrator_account = "677450898543" -> null
+      - arn                   = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-auth-artifacts" -> null
+      - domain                = "ecommerce-domain" -> null
+      - domain_owner          = "677450898543" -> null
+      - id                    = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-auth-artifacts" -> null
+      - region                = "ap-southeast-1" -> null
+      - repository            = "ecommerce-auth-artifacts" -> null
+      - tags                  = {} -> null
+      - tags_all              = {} -> null
+        # (1 unchanged attribute hidden)
+
+      - external_connections {
+          - external_connection_name = "public:maven-central" -> null
+          - package_format           = "maven" -> null
+          - status                   = "AVAILABLE" -> null
+        }
+    }
+
+  # module.codeartifact["ecommerce-common-lib-artifacts"].aws_codeartifact_repository.this will be destroyed
+  # (because aws_codeartifact_repository.this is not in configuration)
+  - resource "aws_codeartifact_repository" "this" {
+      - administrator_account = "677450898543" -> null
+      - arn                   = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-common-lib-artifacts" -> null
+      - domain                = "ecommerce-domain" -> null
+      - domain_owner          = "677450898543" -> null
+      - id                    = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-common-lib-artifacts" -> null
+      - region                = "ap-southeast-1" -> null
+      - repository            = "ecommerce-common-lib-artifacts" -> null
+      - tags                  = {} -> null
+      - tags_all              = {} -> null
+        # (1 unchanged attribute hidden)
+
+      - external_connections {
+          - external_connection_name = "public:maven-central" -> null
+          - package_format           = "maven" -> null
+          - status                   = "AVAILABLE" -> null
+        }
+    }
+
+  # module.codeartifact["ecommerce-parent-artifacts"].aws_codeartifact_repository.this will be destroyed
+  # (because aws_codeartifact_repository.this is not in configuration)
+  - resource "aws_codeartifact_repository" "this" {
+      - administrator_account = "677450898543" -> null
+      - arn                   = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-parent-artifacts" -> null
+      - domain                = "ecommerce-domain" -> null
+      - domain_owner          = "677450898543" -> null
+      - id                    = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-parent-artifacts" -> null
+      - region                = "ap-southeast-1" -> null
+      - repository            = "ecommerce-parent-artifacts" -> null
+      - tags                  = {} -> null
+      - tags_all              = {} -> null
+        # (1 unchanged attribute hidden)
+
+      - external_connections {
+          - external_connection_name = "public:maven-central" -> null
+          - package_format           = "maven" -> null
+          - status                   = "AVAILABLE" -> null
+        }
+    }
+
+  # module.codeartifact["ecommerce-product-artifacts"].aws_codeartifact_repository.this will be destroyed
+  # (because aws_codeartifact_repository.this is not in configuration)
+  - resource "aws_codeartifact_repository" "this" {
+      - administrator_account = "677450898543" -> null
+      - arn                   = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-product-artifacts" -> null
+      - domain                = "ecommerce-domain" -> null
+      - domain_owner          = "677450898543" -> null
+      - id                    = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-product-artifacts" -> null
+      - region                = "ap-southeast-1" -> null
+      - repository            = "ecommerce-product-artifacts" -> null
+      - tags                  = {} -> null
+      - tags_all              = {} -> null
+        # (1 unchanged attribute hidden)
+
+      - external_connections {
+          - external_connection_name = "public:maven-central" -> null
+          - package_format           = "maven" -> null
+          - status                   = "AVAILABLE" -> null
+        }
+    }
+
+  # module.codeartifact["ecommerce-shared"].aws_codeartifact_repository.this will be destroyed
+  # (because aws_codeartifact_repository.this is not in configuration)
+  - resource "aws_codeartifact_repository" "this" {
+      - administrator_account = "677450898543" -> null
+      - arn                   = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-shared" -> null
+      - domain                = "ecommerce-domain" -> null
+      - domain_owner          = "677450898543" -> null
+      - id                    = "arn:aws:codeartifact:ap-southeast-1:677450898543:repository/ecommerce-domain/ecommerce-shared" -> null
+      - region                = "ap-southeast-1" -> null
+      - repository            = "ecommerce-shared" -> null
+      - tags                  = {} -> null
+      - tags_all              = {} -> null
+        # (1 unchanged attribute hidden)
+
+      - upstream {
+          - repository_name = "ecommerce-parent-artifacts" -> null
+        }
+      - upstream {
+          - repository_name = "ecommerce-product-artifacts" -> null
+        }
+      - upstream {
+          - repository_name = "ecommerce-auth-artifacts" -> null
+        }
+    }
+
+  # module.codeartifact_base["ecommerce-auth-artifacts"].aws_codeartifact_repository.this will be created
+  + resource "aws_codeartifact_repository" "this" {
+      + administrator_account = (known after apply)
+      + arn                   = (known after apply)
+      + domain                = "ecommerce-domain"
+      + domain_owner          = (known after apply)
+      + id                    = (known after apply)
+      + region                = "ap-southeast-1"
+      + repository            = "ecommerce-auth-artifacts"
+      + tags_all              = (known after apply)
+
+      + external_connections {
+          + external_connection_name = "public:maven-central"
+          + package_format           = (known after apply)
+          + status                   = (known after apply)
+        }
+    }
+
+  # module.codeartifact_base["ecommerce-common-lib-artifacts"].aws_codeartifact_repository.this will be created
+  + resource "aws_codeartifact_repository" "this" {
+      + administrator_account = (known after apply)
+      + arn                   = (known after apply)
+      + domain                = "ecommerce-domain"
+      + domain_owner          = (known after apply)
+      + id                    = (known after apply)
+      + region                = "ap-southeast-1"
+      + repository            = "ecommerce-common-lib-artifacts"
+      + tags_all              = (known after apply)
+
+      + external_connections {
+          + external_connection_name = "public:maven-central"
+          + package_format           = (known after apply)
+          + status                   = (known after apply)
+        }
+    }
+
+  # module.codeartifact_base["ecommerce-parent-artifacts"].aws_codeartifact_repository.this will be created
+  + resource "aws_codeartifact_repository" "this" {
+      + administrator_account = (known after apply)
+      + arn                   = (known after apply)
+      + domain                = "ecommerce-domain"
+      + domain_owner          = (known after apply)
+      + id                    = (known after apply)
+      + region                = "ap-southeast-1"
+      + repository            = "ecommerce-parent-artifacts"
+      + tags_all              = (known after apply)
+
+      + external_connections {
+          + external_connection_name = "public:maven-central"
+          + package_format           = (known after apply)
+          + status                   = (known after apply)
+        }
+    }
+
+  # module.codeartifact_base["ecommerce-product-artifacts"].aws_codeartifact_repository.this will be created
+  + resource "aws_codeartifact_repository" "this" {
+      + administrator_account = (known after apply)
+      + arn                   = (known after apply)
+      + domain                = "ecommerce-domain"
+      + domain_owner          = (known after apply)
+      + id                    = (known after apply)
+      + region                = "ap-southeast-1"
+      + repository            = "ecommerce-product-artifacts"
+      + tags_all              = (known after apply)
+
+      + external_connections {
+          + external_connection_name = "public:maven-central"
+          + package_format           = (known after apply)
+          + status                   = (known after apply)
+        }
+    }
+
+  # module.codeartifact_with_upstreams["ecommerce-shared"].aws_codeartifact_repository.this will be created
+  + resource "aws_codeartifact_repository" "this" {
+      + administrator_account = (known after apply)
+      + arn                   = (known after apply)
+      + domain                = "ecommerce-domain"
+      + domain_owner          = (known after apply)
+      + id                    = (known after apply)
+      + region                = "ap-southeast-1"
+      + repository            = "ecommerce-shared"
+      + tags_all              = (known after apply)
+
+      + upstream {
+          + repository_name = "ecommerce-parent-artifacts"
+        }
+      + upstream {
+          + repository_name = "ecommerce-product-artifacts"
+        }
+      + upstream {
+          + repository_name = "ecommerce-auth-artifacts"
+        }
+      + upstream {
+          + repository_name = "ecommerce-common-lib-artifacts"
+        }
+    }
+
+Plan: 5 to add, 0 to change, 5 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Saved the plan to: tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "tfplan"
