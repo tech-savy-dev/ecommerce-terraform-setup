@@ -104,6 +104,7 @@ resource "aws_vpc_endpoint" "ecs_agent" {
 }
 
 resource "aws_vpc_endpoint" "ecs_telemetry" {
+  count               = var.enable_ecs_telemetry ? 1 : 0
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${var.region}.ecs-telemetry"
   vpc_endpoint_type   = "Interface"

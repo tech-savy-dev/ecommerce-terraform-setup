@@ -22,7 +22,7 @@ resource "aws_codebuild_project" "maven_project" {
       for_each = var.website_bucket != "" ? [var.website_bucket] : []
       content {
         name  = "WEBSITE_BUCKET"
-        value = environment_variable.value
+        value = environment_variable.value == null ? var.website_bucket : environment_variable.value
         type  = "PLAINTEXT"
       }
     }

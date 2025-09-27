@@ -25,6 +25,11 @@ pipelines = [
     build_project_name  = "dev-ecommerce-parent-pom-build"
   },
   {
+    pipeline_name = "ecommerce-shared-lib"
+    repo_name     = "ecommerce-shared-lib"
+    build_project_name  = "dev-ecommerce-shared-lib-pom-build"
+  },
+  {
     pipeline_name = "ecommerce-product-service"
     repo_name     = "ecommerce-product-service"
     build_project_name  = "dev-ecommerce-product-service-build"
@@ -39,6 +44,15 @@ pipelines = [
     enable_deploy_stage   = true
     codedeploy_app_name   = "ecommerce-auth-service"
     codedeploy_group_name = "ecommerce-auth-service-dg"
+  } ,
+  {
+    pipeline_name = "ecommerce-web-ui"
+    repo_name     = "ecommerce-web-ui"
+    build_project_name  = "dev-ecommerce-web-ui-build"
+    enable_deploy_stage   = true
+    codedeploy_app_name   = ""
+    codedeploy_group_name = ""
+    website_bucket = "ecommerce-web-ui-dev-677450898543"
   } 
 ]
 
@@ -48,11 +62,20 @@ codebuild_projects = [
     buildspec_location = "buildspec.yaml"
   },
   {
+    build_project_name = "dev-ecommerce-shared-lib-pom-build"
+    buildspec_location = "buildspec.yaml"
+  },
+
+  {
     build_project_name = "dev-ecommerce-product-service-build"
     buildspec_location = "buildspec.yaml"
   },
   {
     build_project_name = "dev-ecommerce-auth-service-build"
+    buildspec_location = "buildspec.yaml"
+  },
+  {
+    build_project_name = "dev-ecommerce-web-ui-build"
     buildspec_location = "buildspec.yaml"
   }
 ]
@@ -60,6 +83,11 @@ codebuild_projects = [
 codeartifact_repos = [
   {
     repository_name       = "ecommerce-parent-artifacts"
+    upstream_repositories = []
+    external_connections  = ["public:maven-central"]
+  },
+  {
+    repository_name       = "ecommerce-shared-lib-artifacts"
     upstream_repositories = []
     external_connections  = ["public:maven-central"]
   },
@@ -80,8 +108,13 @@ codeartifact_repos = [
   },
   {
     repository_name       = "ecommerce-shared"
-    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-product-artifacts","ecommerce-auth-artifacts","ecommerce-common-lib-artifacts"]
+    upstream_repositories = ["ecommerce-parent-artifacts", "ecommerce-shared-lib-artifacts", "ecommerce-product-artifacts","ecommerce-auth-artifacts","ecommerce-common-lib-artifacts"]
     external_connections  = null
+  },
+  {
+    repository_name       = "ecommerce-web-ui-artifacts"
+    upstream_repositories = []
+    external_connections  = ["public:npmjs"]
   }
 ]
 

@@ -52,8 +52,10 @@ module "iam" {
   website_bucket          = module.website_bucket.bucket_name
   codebuild_role_names    = [
     "codebuild-role-dev-ecommerce-parent-pom-build",
+    "codebuild-role-dev-ecommerce-shared-lib-pom-build",
     "codebuild-role-dev-ecommerce-product-service-build",
-    "codebuild-role-dev-ecommerce-auth-service-build"
+    "codebuild-role-dev-ecommerce-auth-service-build",
+    "codebuild-role-dev-ecommerce-web-ui-build"
   ]
 }
 
@@ -141,7 +143,8 @@ module "vpcendpoint" {
   subnet_ids         = module.subnets.private_subnet_ids
   route_table_ids    = module.subnets.private_route_table_ids
   region             = var.region
-  ecs_security_group_id = module.ecs.ecs_security_group_id
+  ecs_security_group_id = module.ecs_private.ecs_security_group_id
+  enable_ecs_telemetry = false
 
 }
 
@@ -151,6 +154,20 @@ module "acm" {
   san_names               = var.san_names
 }
 
+module "cloudfront" {
+  source = "../../modules/cloudfront"
+
+  # Only create for dev by default; set var.create_cloudfront = true to enable
+  website_bucket_name     = module.website_bucket.bucket_name
+  website_bucket_endpoint = module.website_bucket.website_endpoint
+  enabled                 = true
+  comment                 = "CDN for ${module.website_bucket.bucket_name}"
+  aliases                 = ["shophealthysnacks.com", "www.shophealthysnacks.com"]
+  # Replace the placeholder below with your ACM certificate ARN located in us-east-1
+  acm_certificate_arn     = "arn:aws:acm:us-east-1:677450898543:certificate/88082d1c-9a77-4d82-8c4e-9a8e7127fd87"
+  price_class             = "PriceClass_100"
+}
+
 locals {
   code_deploy_tasks = [
     {
@@ -158,16 +175,8 @@ locals {
       blue_target_group_name  = "ecommerce-auth-blue-tg"
       green_target_group_name = "ecommerce-auth-green-tg"
       health_check_path       = "/auth/api/actuator/health"
-      path_pattern            = "/auth/*"
+      path_pattern            = "/as*"
       priority                = 1
-    },
-    {
-      service_name            = "ecommerce-product-service"
-      blue_target_group_name  = "ecommerce-product-blue-tg"
-      green_target_group_name = "ecommerce-product-green-tg"
-      health_check_path       = "/actuator/health"
-      path_pattern            = "/product/*"
-      priority                = 2
     }
   ]
 
@@ -260,7 +269,7 @@ locals {
       service_name     = "ecommerce-auth-service"
       cpu              = "512"
       memory           = "1024"
-      assign_public_ip = false
+      assign_public_ip = true
       desired_count    = 1
       use_codedeploy   = true
     },
@@ -275,40 +284,42 @@ locals {
       memory           = "1024"
       assign_public_ip = false
       desired_count    = 1
-      use_codedeploy   = true
+      use_codedeploy   = false
     }
   ]
 }
 
 
 # ECS services with blue TG ARNs attached to load balancer
-module "ecs" {
+module "ecs_public_auth" {
   source                 = "../../modules/ecs"
   cluster_name           = var.cluster_name
-  subnet_ids             = module.subnets.private_subnet_ids
+  subnet_ids             = module.subnets.public_subnet_ids
   vpc_id                 = module.vpc.vpc_id
   region                 = var.region
-  service_name           = var.service_name
+  service_name           = "ecommerce-auth"
 
-  ecs_tasks              = local.ecs_tasks
+  ecs_tasks              = [for t in local.ecs_tasks : t if t.service_name == "ecommerce-auth-service"]
   ecs_execution_role_arn = module.iam.ecs_execution_role_arn
   alb_sg_id              = module.alb.alb_sg_id
   blue_target_group_arns = local.blue_target_group_arns
 }
 
-module "natgw" {
-  source = "../../modules/natgw"
+module "ecs_private" {
+  source                 = "../../modules/ecs"
+  cluster_name           = var.cluster_name
+  subnet_ids             = module.subnets.private_subnet_ids
+  vpc_id                 = module.vpc.vpc_id
+  region                 = var.region
+  service_name           = "ecommerce-private"
 
-  name              = "dev"
-  env               = "dev"
-  vpc_id            = module.vpc.vpc_id
-  azs               = var.availability_zones
-  public_subnet_ids = module.subnets.public_subnet_ids
-  private_subnet_ids = module.subnets.private_subnet_ids
-  private_route_table_ids = module.subnets.private_route_table_ids
-
-  natgw_per_az = false # ✅ only 1 NAT Gateway for cost-saving (true==span1 angw for 1 az)
+  ecs_tasks              = [for t in local.ecs_tasks : t if t.service_name != "ecommerce-auth-service"]
+  ecs_execution_role_arn = module.iam.ecs_execution_role_arn
+  alb_sg_id              = module.alb.alb_sg_id
+  blue_target_group_arns = local.blue_target_group_arns
 }
+
+
 
  
 

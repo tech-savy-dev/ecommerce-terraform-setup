@@ -24,3 +24,9 @@ variable "ecs_security_group_id" {
   type        = string
 }
 
+variable "enable_ecs_telemetry" {
+  description = "Whether to create the ECS telemetry VPC endpoint"
+  type        = bool
+  default     = true
+}
+
