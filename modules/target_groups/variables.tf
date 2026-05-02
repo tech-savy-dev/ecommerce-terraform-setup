@@ -1,6 +1,6 @@
 variable "services" {
   type = list(object({
-    service_name         = string
+    service_name            = string
     blue_target_group_name  = string
     green_target_group_name = string
   }))
@@ -11,10 +11,6 @@ variable "vpc_id" {
 }
 
 variable "alb_name" {
-  type = string
-}
-
-variable "environment" {
   type = string
 }
 

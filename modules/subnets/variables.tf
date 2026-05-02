@@ -24,6 +24,6 @@ variable "subnet_name" {
 }
 
 variable "internet_gateway_id" {
-  description = "Name prefix for subnets"
+  description = "ID of the Internet Gateway for public subnet route tables"
   type        = string
 }

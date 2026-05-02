@@ -1,19 +1,3 @@
-resource "aws_lb_listener_rule" "service_route" {
-  listener_arn = var.https_listener_arn
-  priority     = var.priority
-
-  condition {
-    path_pattern {
-      values = [var.path_pattern]
-    }
-  }
-
-  action {
-    type             = "forward"
-    target_group_arn = var.blue_target_group_arn
-  }
-}
-
 resource "aws_codedeploy_app" "ecs_app" {
   name             = var.app_name
   compute_platform = "ECS"
@@ -24,7 +8,7 @@ resource "aws_codedeploy_deployment_group" "ecs_deployment_group" {
   deployment_group_name = "${var.app_name}-dg"
   service_role_arn      = var.codedeploy_role_arn
 
-  deployment_config_name = "CodeDeployDefault.ECSAllAtOnce"
+  deployment_config_name = var.deployment_config_name
 
   deployment_style {
     deployment_type   = "BLUE_GREEN"
@@ -39,7 +23,7 @@ resource "aws_codedeploy_deployment_group" "ecs_deployment_group" {
   load_balancer_info {
     target_group_pair_info {
       prod_traffic_route {
-        listener_arns = [var.listener_arn]
+        listener_arns = [var.https_listener_arn]
       }
 
       target_group {
@@ -55,7 +39,7 @@ resource "aws_codedeploy_deployment_group" "ecs_deployment_group" {
   blue_green_deployment_config {
     terminate_blue_instances_on_deployment_success {
       action                           = "TERMINATE"
-      termination_wait_time_in_minutes = 0
+      termination_wait_time_in_minutes = var.termination_wait_minutes
     }
 
     deployment_ready_option {

@@ -1,37 +1,41 @@
 variable "name" {
-  type = string
+  description = "Name prefix for NAT Gateway and related resources"
+  type        = string
 }
 
-variable "env" {
-  type = string
+variable "environment" {
+  description = "Deployment environment (dev, stage, prod)"
+  type        = string
 }
 
 variable "vpc_id" {
-  type = string
+  description = "VPC ID where NAT Gateways will be created"
+  type        = string
 }
 
 variable "azs" {
-  type = list(string)
+  description = "List of availability zones (used when natgw_per_az = true)"
+  type        = list(string)
 }
 
 variable "public_subnet_ids" {
-  type = list(string)
   description = "Public subnets where NAT Gateway(s) will be placed"
+  type        = list(string)
 }
 
 variable "private_subnet_ids" {
-  type = list(string)
   description = "Private subnets to route through NAT Gateway(s)"
+  type        = list(string)
 }
 
 variable "private_route_table_ids" {
+  description = "Optional existing private route table IDs; if provided, only NAT routes are added (no new tables created)"
   type        = list(string)
-  description = "Optional existing private route tables; if provided, Terraform will only add NAT routes"
   default     = []
 }
 
 variable "natgw_per_az" {
+  description = "When true, one NAT Gateway per AZ is created for HA; when false, a single shared NAT Gateway is used"
   type        = bool
-  description = "true: one NAT GW per AZ; false: single NAT GW for all private subnets"
   default     = true
 }

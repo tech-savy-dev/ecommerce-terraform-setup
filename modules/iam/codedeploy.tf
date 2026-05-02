@@ -1,5 +1,5 @@
 resource "aws_iam_role" "codedeploy_role" {
-name = "codedeploy-role-${var.project}-${var.environment}"
+  name = "codedeploy-role-${var.project}-${var.environment}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -12,7 +12,7 @@ name = "codedeploy-role-${var.project}-${var.environment}"
     }]
   })
 
-   tags = {
+  tags = {
     Name        = "codedeploy-role-${var.project}-${var.environment}"
     Environment = var.environment
     Project     = var.project
@@ -20,8 +20,9 @@ name = "codedeploy-role-${var.project}-${var.environment}"
 }
 
 resource "aws_iam_role_policy" "codedeploy_policy" {
-  name = "codedeploy-role-${var.project}-${var.environment}-policy"
+  name = "codedeploy-policy-${var.project}-${var.environment}"
   role = aws_iam_role.codedeploy_role.id
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -34,28 +35,39 @@ resource "aws_iam_role_policy" "codedeploy_policy" {
           "ecs:DeleteTaskSet",
           "ecs:DescribeTaskSets",
           "ecs:UpdateTaskSet",
-          "ecs:UpdateServicePrimaryTaskSet",
-          "elasticloadbalancing:*",
-          "cloudwatch:PutMetricAlarm",
-          "cloudwatch:DescribeAlarms",
-          "cloudwatch:DeleteAlarms",
-          "autoscaling:CompleteLifecycleAction",
-          "autoscaling:PutLifecycleHook",
-          "autoscaling:DeleteLifecycleHook",
-          "autoscaling:DescribeAutoScalingGroups",
-          "autoscaling:DescribeLifecycleHooks",
-          "autoscaling:RecordLifecycleActionHeartbeat"
+          "ecs:UpdateServicePrimaryTaskSet"
+        ]
+        Resource = "*"
+      },
+      {
+        # Scoped ELB actions required for blue/green traffic shifting
+        Effect = "Allow"
+        Action = [
+          "elasticloadbalancing:DescribeTargetGroups",
+          "elasticloadbalancing:DescribeListeners",
+          "elasticloadbalancing:ModifyListener",
+          "elasticloadbalancing:DescribeRules",
+          "elasticloadbalancing:ModifyRule",
+          "elasticloadbalancing:RegisterTargets",
+          "elasticloadbalancing:DeregisterTargets",
+          "elasticloadbalancing:DescribeTargetHealth"
         ]
         Resource = "*"
       },
       {
         Effect = "Allow"
         Action = [
-          "iam:PassRole"
+          "cloudwatch:PutMetricAlarm",
+          "cloudwatch:DescribeAlarms",
+          "cloudwatch:DeleteAlarms"
         ]
-        Resource = [
-          aws_iam_role.ecs_execution_role.arn
-        ]
+        Resource = "*"
+      },
+      {
+        # PassRole scoped to ECS execution role only
+        Effect   = "Allow"
+        Action   = ["iam:PassRole"]
+        Resource = [aws_iam_role.ecs_execution_role.arn]
       },
       {
         Effect = "Allow"

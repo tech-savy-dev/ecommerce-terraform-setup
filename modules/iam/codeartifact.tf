@@ -1,19 +1,32 @@
 resource "aws_iam_policy" "codeartifact_access" {
- name = "CodeArtifactAccessPolicy"
+  name        = "codeartifact-access-${var.project}-${var.environment}"
+  description = "Allows CodeBuild to authenticate and read/publish to CodeArtifact"
+
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
       {
-        Effect   = "Allow",
-        Action   = [
+        Effect = "Allow",
+        Action = [
           "codeartifact:GetAuthorizationToken",
           "codeartifact:GetRepositoryEndpoint",
           "codeartifact:PublishPackageVersion",
-          "codeartifact:PutPackageMetadata", 
-          "codeartifact:ReadFromRepository",
-          "sts:GetServiceBearerToken"
+          "codeartifact:PutPackageMetadata",
+          "codeartifact:ReadFromRepository"
         ],
-        Resource = "*"
+        # Scoped to the ecommerce domain in this account/region
+        Resource = "arn:aws:codeartifact:*:${data.aws_caller_identity.current.account_id}:domain/ecommerce-domain"
+      },
+      {
+        # GetServiceBearerToken must target STS globally
+        Effect   = "Allow",
+        Action   = ["sts:GetServiceBearerToken"],
+        Resource = "*",
+        Condition = {
+          StringEquals = {
+            "sts:AWSServiceName" = "codeartifact.amazonaws.com"
+          }
+        }
       }
     ]
   })

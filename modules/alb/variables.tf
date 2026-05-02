@@ -24,6 +24,12 @@ variable "environment" {
 }
 
 variable "blue_target_group_arns" {
-  type = map(string)
   description = "Map of service_name to blue target group ARN"
+  type        = map(string)
+}
+
+variable "enable_deletion_protection" {
+  description = "Enable ALB deletion protection. Set to false only for non-production environments."
+  type        = bool
+  default     = true
 }

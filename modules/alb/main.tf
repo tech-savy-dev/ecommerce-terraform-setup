@@ -32,12 +32,12 @@ resource "aws_security_group" "alb_sg" {
 }
 
 resource "aws_lb" "alb" {
-  name               = "${var.alb_name}-alb"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = var.public_subnets
-  enable_deletion_protection = false
+  name                       = "${var.alb_name}-alb"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.alb_sg.id]
+  subnets                    = var.public_subnets
+  enable_deletion_protection = var.enable_deletion_protection
 
   tags = {
     Name = "${var.alb_name}-alb"
@@ -48,7 +48,7 @@ resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.alb.arn
   port              = 443
   protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
   certificate_arn   = var.certificate_arn
 
   default_action {

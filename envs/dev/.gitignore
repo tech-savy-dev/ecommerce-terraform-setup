@@ -2,4 +2,8 @@
 *.tfstate
 *.tfstate.backup
 *.log
-crash.log.terraform/
+crash.log
+tfplan
+*.tfplan
+state.json
+plan_output*.txt

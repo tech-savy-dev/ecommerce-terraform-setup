@@ -1,8 +1,3 @@
-
-resource "aws_ecs_cluster" "this" {
-  name = var.cluster_name
-}
-
 resource "aws_ecs_task_definition" "this" {
   for_each = { for task in var.ecs_tasks : task.task_name => task }
 
@@ -15,8 +10,8 @@ resource "aws_ecs_task_definition" "this" {
 
   container_definitions = jsonencode([
     {
-      name      = each.value.container_name
-      image     = each.value.image_url
+      name  = each.value.container_name
+      image = each.value.image_url
       portMappings = [
         {
           containerPort = each.value.container_port
@@ -44,13 +39,14 @@ resource "aws_security_group" "ecs_security_group" {
     from_port       = 8080
     to_port         = 8080
     protocol        = "tcp"
-    security_groups = [var.alb_sg_id]  # Allow traffic from ALB security group
+    security_groups = [var.alb_sg_id]
   }
 
+  # Restrict outbound to HTTPS only — covers ECR, STS, ECS, CloudWatch VPC endpoints
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"   # Allow all outbound traffic
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -63,7 +59,7 @@ resource "aws_ecs_service" "this" {
   for_each = { for task in var.ecs_tasks : task.service_name => task }
 
   name            = each.value.service_name
-  cluster         = aws_ecs_cluster.this.id
+  cluster         = var.cluster_arn
   task_definition = aws_ecs_task_definition.this[each.key].arn
   desired_count   = each.value.desired_count
   launch_type     = "FARGATE"
@@ -78,7 +74,7 @@ resource "aws_ecs_service" "this" {
     assign_public_ip = each.value.assign_public_ip
   }
 
-   dynamic "load_balancer" {
+  dynamic "load_balancer" {
     for_each = each.value.use_codedeploy ? [1] : []
     content {
       target_group_arn = var.blue_target_group_arns[each.key]
@@ -87,11 +83,11 @@ resource "aws_ecs_service" "this" {
     }
   }
 
-
   lifecycle {
     ignore_changes = [
       task_definition,
-      desired_count
+      desired_count,
+      load_balancer
     ]
   }
 }

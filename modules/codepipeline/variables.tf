@@ -1,7 +1,3 @@
-variable "github_token" {
-  type = string
-}
-
 variable "artifact_bucket" {
   type = string
 }

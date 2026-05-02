@@ -3,12 +3,23 @@ resource "aws_security_group" "vpc_endpoint_sg" {
   description = "Security group for VPC endpoints"
   vpc_id      = var.vpc_id
 
-  # Ingress: allow inbound HTTPS from ECS tasks security group
+  # Ingress: allow inbound HTTPS from ECS private tasks security group
   ingress {
     from_port       = 443
     to_port         = 443
     protocol        = "tcp"
     security_groups = [var.ecs_security_group_id]
+  }
+
+  # Ingress: allow inbound HTTPS from ECS public auth service security group (if provided)
+  dynamic "ingress" {
+    for_each = var.auth_security_group_id != "" ? [1] : []
+    content {
+      from_port       = 443
+      to_port         = 443
+      protocol        = "tcp"
+      security_groups = [var.auth_security_group_id]
+    }
   }
 
   # Egress: allow all outbound HTTPS traffic to AWS service endpoints
@@ -30,7 +41,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${var.region}.ecr.api"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = var.subnet_ids
+  subnet_ids          = length(var.ecr_subnet_ids) > 0 ? var.ecr_subnet_ids : var.subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
   tags = {
@@ -42,19 +53,19 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   vpc_id              = var.vpc_id
   service_name        = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type   = "Interface"
-  subnet_ids          = var.subnet_ids
+  subnet_ids          = length(var.ecr_subnet_ids) > 0 ? var.ecr_subnet_ids : var.subnet_ids
   security_group_ids  = [aws_security_group.vpc_endpoint_sg.id]
   private_dns_enabled = true
-   tags = {
+  tags = {
     Name = "ecommerce-dkr-endpoint"
   }
 }
 
 resource "aws_vpc_endpoint" "ecs_sts" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.${var.region}.sts"
-  vpc_endpoint_type = "Interface"
-  subnet_ids        = var.subnet_ids
+  vpc_id             = var.vpc_id
+  service_name       = "com.amazonaws.${var.region}.sts"
+  vpc_endpoint_type  = "Interface"
+  subnet_ids         = var.subnet_ids
   security_group_ids = [aws_security_group.vpc_endpoint_sg.id]
 
   private_dns_enabled = true
@@ -65,10 +76,10 @@ resource "aws_vpc_endpoint" "ecs_sts" {
 }
 
 resource "aws_vpc_endpoint" "s3_gateway" {
-  vpc_id             = var.vpc_id
-  service_name       = "com.amazonaws.${var.region}.s3"
-  vpc_endpoint_type  = "Gateway"
-  route_table_ids    = var.route_table_ids
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = var.route_table_ids
 
   tags = {
     Name = "ecommerce-s3-gateway-endpoint"

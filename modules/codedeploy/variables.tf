@@ -1,47 +1,46 @@
 variable "app_name" {
-  type = string
+  description = "Name of the CodeDeploy application (matches ECS service name)"
+  type        = string
 }
 
 variable "ecs_cluster_name" {
-  type = string
+  description = "Name of the ECS cluster where the service runs"
+  type        = string
 }
 
 variable "ecs_service_name" {
-  type = string
+  description = "Name of the ECS service managed by this deployment group"
+  type        = string
 }
 
 variable "codedeploy_role_arn" {
-  type = string
-}
-
-variable "listener_arn" {
-  type = string
+  description = "IAM role ARN that CodeDeploy assumes to perform deployments"
+  type        = string
 }
 
 variable "https_listener_arn" {
-  type = string
-}
-
-variable "priority" {
-  type = number
-}
-
-variable "path_pattern" {
-  type = string
+  description = "ARN of the ALB HTTPS listener used for traffic routing during blue/green deployments"
+  type        = string
 }
 
 variable "blue_target_group_name" {
-  type = string
+  description = "Name of the blue target group"
+  type        = string
 }
 
 variable "green_target_group_name" {
-  type = string
+  description = "Name of the green target group"
+  type        = string
 }
 
-variable "blue_target_group_arn" {
-  type = string
+variable "termination_wait_minutes" {
+  description = "Minutes to wait before terminating the original (blue) task set after a successful deployment"
+  type        = number
+  default     = 0
 }
 
-variable "green_target_group_arn" {
-  type = string
+variable "deployment_config_name" {
+  description = "CodeDeploy deployment configuration name for ECS blue/green deployments"
+  type        = string
+  default     = "CodeDeployDefault.ECSAllAtOnce"
 }

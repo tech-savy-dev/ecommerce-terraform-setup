@@ -5,9 +5,14 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "Private subnet IDs for the VPC endpoints"
+  description = "Private subnet IDs for VPC endpoints (ECR and other endpoints use these)"
 }
 
+variable "ecr_subnet_ids" {
+  type        = list(string)
+  description = "Subnet IDs for ECR endpoints (can include public subnets to allow image pulls from public tasks)"
+  default     = []
+}
 
 variable "region" {
   type        = string
@@ -20,8 +25,14 @@ variable "route_table_ids" {
 }
 
 variable "ecs_security_group_id" {
-  description = "Ecs security group"
+  description = "ECS private security group"
   type        = string
+}
+
+variable "auth_security_group_id" {
+  description = "ECS public auth service security group"
+  type        = string
+  default     = ""
 }
 
 variable "enable_ecs_telemetry" {

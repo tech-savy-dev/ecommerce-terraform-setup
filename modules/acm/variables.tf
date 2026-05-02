@@ -1,7 +1,11 @@
 variable "domain_name" {
-  default = "example.com"
+  description = "Primary domain name for the ACM certificate (e.g. example.com)"
+  type        = string
+  default     = "example.com"
 }
 
 variable "san_names" {
-  default = ["www.example.com"]
+  description = "Subject Alternative Names for the certificate (e.g. [\"www.example.com\"])"
+  type        = list(string)
+  default     = ["www.example.com"]
 }
